@@ -23,8 +23,8 @@ def login():
     })
 
     access_token = create_access_token(identity=username)
-    exp_time = datetime.now(timezone.utc).timestamp() # START TIME NOT EXP TIME
+    seconds_till_exp = app.config['JWT_ACCESS_TOKEN_EXPIRES'].seconds
     refresh_token = create_refresh_token(identity=username)
-    response = jsonify({'access_token': access_token, 'access_token_expiry': int(exp_time)})
+    response = jsonify({'access_token': access_token, 'access_token_expiry': seconds_till_exp})
     set_refresh_cookies(response, refresh_token)
     return response
