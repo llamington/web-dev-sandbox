@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_jwt_extended import JWTManager, create_access_token, create_refresh_token, set_refresh_cookies
 from bcrypt import hashpw, checkpw, gensalt
+from datetime import datetime, timezone
 
 app = Flask(__name__)
 
@@ -22,7 +23,8 @@ def login():
     })
 
     access_token = create_access_token(identity=username)
+    exp_time = datetime.now(timezone.utc).timestamp() # START TIME NOT EXP TIME
     refresh_token = create_refresh_token(identity=username)
-    response = jsonify({'access_token': access_token})
+    response = jsonify({'access_token': access_token, 'access_token_expiry': int(exp_time)})
     set_refresh_cookies(response, refresh_token)
     return response
